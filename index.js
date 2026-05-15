@@ -1,4 +1,5 @@
 require('dotenv').config()
+
 const express = require('express')
 const mongoose = require('mongoose')
 const multer = require('multer')
@@ -12,18 +13,37 @@ const ItemPedido = require('./models/ItemPedido')
 
 const app = express()
 
+// =========================
+// MIDDLEWARES
+// =========================
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 app.use(express.static(path.join(__dirname, 'public')))
 
+// =========================
+// TEMP UPLOADS (VERCEL)
+// =========================
 fs.mkdirSync('/tmp/uploads', { recursive: true })
 
-// ===== MongoDB =====
-mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log('✅ MongoDB conectado'))
-.catch(err => console.error('❌ Erro Mongo:', err))
+// =========================
+// MONGODB
+// =========================
+console.log("Mongo URI:", process.env.MONGO_URI ? "OK" : "UNDEFINED")
 
-// ===== Upload =====
+mongoose.connect(process.env.MONGO_URI, {
+  dbName: 'nutrivida'
+})
+.then(() => {
+  console.log('✅ MongoDB conectado')
+})
+.catch((err) => {
+  console.error('❌ Erro Mongo:', err)
+})
+
+// =========================
+// MULTER
+// =========================
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, '/tmp/uploads/')
@@ -35,50 +55,63 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
-// ===== LOGIN =====
+// =========================
+// LOGIN
+// =========================
 app.post('/admin/login', (req, res) => {
-  const { usuario, senha } = req.body
+  try {
+    const { usuario, senha } = req.body
 
-  const usuarioCorreto = process.env.ADMIN_USUARIO || 'nutrivida'
-  const senhaCorreta = process.env.ADMIN_SENHA || 'nutrivida123'
+    const usuarioCorreto = process.env.ADMIN_USUARIO || 'nutrivida'
+    const senhaCorreta = process.env.ADMIN_SENHA || 'nutrivida123'
 
-  if (usuario === usuarioCorreto && senha === senhaCorreta) {
-    return res.json({ sucesso: true })
+    if (usuario === usuarioCorreto && senha === senhaCorreta) {
+      return res.json({
+        sucesso: true,
+        mensagem: 'Login realizado'
+      })
+    }
+
+    return res.status(401).json({
+      sucesso: false,
+      mensagem: 'Usuário ou senha incorretos'
+    })
+
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ erro: err.message })
   }
-
-  res.status(401).json({
-    sucesso: false,
-    mensagem: 'Usuário ou senha incorretos'
-  })
 })
 
 
 // =========================
 // PRODUTOS
 // =========================
-
 app.get('/produtos', async (req, res) => {
   try {
     const produtos = await Produto.find()
     res.json(produtos)
   } catch (err) {
-  console.error(err)
-  res.status(500).json({ erro: err.message })
-}
+    console.error('ERRO PRODUTOS:', err)
+    res.status(500).json({ erro: err.message })
+  }
 })
 
 app.post('/produtos', upload.single('foto'), async (req, res) => {
   try {
-    const foto = req.file ? '/tmp/uploads/' + req.file.filename : null
+    const foto = req.file
+      ? '/tmp/uploads/' + req.file.filename
+      : null
 
     const produto = await Produto.create({
       ...req.body,
       foto
     })
 
-    res.json(produto)
+    res.status(201).json(produto)
+
   } catch (err) {
-    console.error(err)
+    console.error('ERRO CRIAR PRODUTO:', err)
     res.status(500).json({ erro: err.message })
   }
 })
@@ -91,11 +124,15 @@ app.put('/produtos/:id', upload.single('foto'), async (req, res) => {
       dados.foto = '/tmp/uploads/' + req.file.filename
     }
 
-    await Produto.findByIdAndUpdate(req.params.id, dados)
+    await Produto.findByIdAndUpdate(
+      req.params.id,
+      dados
+    )
 
     res.json({ mensagem: 'Produto atualizado' })
+
   } catch (err) {
-    console.error(err)
+    console.error('ERRO UPDATE PRODUTO:', err)
     res.status(500).json({ erro: err.message })
   }
 })
@@ -104,8 +141,9 @@ app.delete('/produtos/:id', async (req, res) => {
   try {
     await Produto.findByIdAndDelete(req.params.id)
     res.json({ mensagem: 'Produto removido' })
+
   } catch (err) {
-    console.error(err)
+    console.error('ERRO DELETE PRODUTO:', err)
     res.status(500).json({ erro: err.message })
   }
 })
@@ -114,7 +152,6 @@ app.delete('/produtos/:id', async (req, res) => {
 // =========================
 // PEDIDOS
 // =========================
-
 app.post('/pedidos', async (req, res) => {
   try {
     const {
@@ -125,6 +162,12 @@ app.post('/pedidos', async (req, res) => {
       precisa_maquineta,
       itens
     } = req.body
+
+    if (!itens || itens.length === 0) {
+      return res.status(400).json({
+        erro: 'Nenhum item enviado'
+      })
+    }
 
     const pedido = await Pedido.create({
       cliente_nome,
@@ -138,7 +181,7 @@ app.post('/pedidos', async (req, res) => {
       await ItemPedido.create({
         pedido_id: pedido._id,
         produto_id: item.produto_id,
-        quantidade: item.quantidade
+        quantidade: item.quantidade || 1
       })
     }
 
@@ -148,8 +191,8 @@ app.post('/pedidos', async (req, res) => {
     })
 
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ erro: 'Erro ao criar pedido' })
+    console.error('ERRO PEDIDO:', err)
+    res.status(500).json({ erro: err.message })
   }
 })
 
@@ -159,8 +202,10 @@ app.get('/pedidos', async (req, res) => {
       .sort({ data_pedido: -1 })
 
     res.json(pedidos)
-  } catch {
-    res.status(500).json({ erro: 'Erro ao buscar pedidos' })
+
+  } catch (err) {
+    console.error('ERRO PEDIDOS:', err)
+    res.status(500).json({ erro: err.message })
   }
 })
 
@@ -171,8 +216,10 @@ app.get('/pedidos/:id/itens', async (req, res) => {
     }).populate('produto_id')
 
     res.json(itens)
-  } catch {
-    res.status(500).json({ erro: 'Erro ao buscar itens' })
+
+  } catch (err) {
+    console.error('ERRO ITENS:', err)
+    res.status(500).json({ erro: err.message })
   }
 })
 
@@ -183,9 +230,13 @@ app.put('/pedidos/:id/status', async (req, res) => {
       { status_pedido: req.body.status }
     )
 
-    res.json({ mensagem: 'Status atualizado' })
-  } catch {
-    res.status(500).json({ erro: 'Erro ao atualizar' })
+    res.json({
+      mensagem: 'Status atualizado'
+    })
+
+  } catch (err) {
+    console.error('ERRO STATUS:', err)
+    res.status(500).json({ erro: err.message })
   }
 })
 
@@ -197,16 +248,24 @@ app.delete('/pedidos/:id', async (req, res) => {
 
     await Pedido.findByIdAndDelete(req.params.id)
 
-    res.json({ mensagem: 'Pedido removido' })
-  } catch {
-    res.status(500).json({ erro: 'Erro ao remover pedido' })
+    res.json({
+      mensagem: 'Pedido removido'
+    })
+
+  } catch (err) {
+    console.error('ERRO DELETE PEDIDO:', err)
+    res.status(500).json({ erro: err.message })
   }
 })
 
 
-// ===== HOME =====
+// =========================
+// HOME
+// =========================
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'))
+  res.sendFile(
+    path.join(__dirname, 'public', 'index.html')
+  )
 })
 
 module.exports = app
