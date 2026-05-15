@@ -429,3 +429,47 @@ main h2 {
     outline: none;
     border-color: var(--dourado) !important;
 }
+
+/* painel oculto por padrão */
+#carrinho-painel {
+    display: none;          /* ou transform/opacity se preferir animação */
+}
+
+#carrinho-painel.aberto {
+    display: flex;
+    flex-direction: column;
+}
+
+/* item dentro do painel */
+.carrinho-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    gap: 8px;
+}
+
+.carrinho-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.carrinho-item-acoes {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+/* toast */
+.toast {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .3s;
+}
+.toast.show {
+    visibility: visible;
+    opacity: 1;
+}
