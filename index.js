@@ -5,7 +5,9 @@ const mongoose = require('mongoose')
 const multer = require('multer')
 const path = require('path')
 const cors = require('cors')
-const fs = require('fs')
+
+const { v2: cloudinary } = require('cloudinary')
+const { CloudinaryStorage } = require('multer-storage-cloudinary')
 
 const Produto = require('./models/Produto')
 const Pedido = require('./models/Pedido')
@@ -21,39 +23,41 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 app.use(express.static(path.join(__dirname, 'public')))
 
-// =========================
-// TEMP UPLOADS (VERCEL)
-// =========================
-fs.mkdirSync('/tmp/uploads', { recursive: true })
 
 // =========================
 // MONGODB
 // =========================
-console.log("Mongo URI:", process.env.MONGO_URI ? "OK" : "UNDEFINED")
+console.log(
+  "Mongo URI:",
+  process.env.MONGO_URI ? "OK" : "UNDEFINED"
+)
 
 mongoose.connect(process.env.MONGO_URI, {
   dbName: 'nutrivida'
 })
-.then(() => {
-  console.log('✅ MongoDB conectado')
-})
-.catch((err) => {
-  console.error('❌ Erro Mongo:', err)
-})
+.then(() => console.log('✅ MongoDB conectado'))
+.catch(err => console.error('❌ Erro Mongo:', err))
+
 
 // =========================
-// MULTER
+// CLOUDINARY
 // =========================
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, '/tmp/uploads/')
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname))
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+})
+
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'nutrivida',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp']
   }
 })
 
 const upload = multer({ storage })
+
 
 // =========================
 // LOGIN
@@ -62,10 +66,16 @@ app.post('/admin/login', (req, res) => {
   try {
     const { usuario, senha } = req.body
 
-    const usuarioCorreto = process.env.ADMIN_USUARIO || 'nutrivida'
-    const senhaCorreta = process.env.ADMIN_SENHA || 'nutrivida123'
+    const usuarioCorreto =
+      process.env.ADMIN_USUARIO || 'nutrivida'
 
-    if (usuario === usuarioCorreto && senha === senhaCorreta) {
+    const senhaCorreta =
+      process.env.ADMIN_SENHA || 'nutrivida123'
+
+    if (
+      usuario === usuarioCorreto &&
+      senha === senhaCorreta
+    ) {
       return res.json({
         sucesso: true,
         mensagem: 'Login realizado'
@@ -91,59 +101,69 @@ app.get('/produtos', async (req, res) => {
   try {
     const produtos = await Produto.find()
     res.json(produtos)
+
   } catch (err) {
-    console.error('ERRO PRODUTOS:', err)
+    console.error(err)
     res.status(500).json({ erro: err.message })
   }
 })
 
-app.post('/produtos', upload.single('foto'), async (req, res) => {
-  try {
-    const foto = req.file
-      ? '/tmp/uploads/' + req.file.filename
-      : null
+app.post('/produtos',
+  upload.single('foto'),
+  async (req, res) => {
+    try {
+      const foto = req.file
+        ? req.file.path
+        : null
 
-    const produto = await Produto.create({
-      ...req.body,
-      foto
-    })
+      const produto = await Produto.create({
+        ...req.body,
+        foto
+      })
 
-    res.status(201).json(produto)
+      res.status(201).json(produto)
 
-  } catch (err) {
-    console.error('ERRO CRIAR PRODUTO:', err)
-    res.status(500).json({ erro: err.message })
-  }
-})
-
-app.put('/produtos/:id', upload.single('foto'), async (req, res) => {
-  try {
-    const dados = { ...req.body }
-
-    if (req.file) {
-      dados.foto = '/tmp/uploads/' + req.file.filename
+    } catch (err) {
+      console.error(err)
+      res.status(500).json({ erro: err.message })
     }
+})
 
-    await Produto.findByIdAndUpdate(
-      req.params.id,
-      dados
-    )
+app.put('/produtos/:id',
+  upload.single('foto'),
+  async (req, res) => {
+    try {
+      const dados = { ...req.body }
 
-    res.json({ mensagem: 'Produto atualizado' })
+      if (req.file) {
+        dados.foto = req.file.path
+      }
 
-  } catch (err) {
-    console.error('ERRO UPDATE PRODUTO:', err)
-    res.status(500).json({ erro: err.message })
-  }
+      await Produto.findByIdAndUpdate(
+        req.params.id,
+        dados
+      )
+
+      res.json({
+        mensagem: 'Produto atualizado'
+      })
+
+    } catch (err) {
+      console.error(err)
+      res.status(500).json({ erro: err.message })
+    }
 })
 
 app.delete('/produtos/:id', async (req, res) => {
   try {
     await Produto.findByIdAndDelete(req.params.id)
-    res.json({ mensagem: 'Produto removido' })
+
+    res.json({
+      mensagem: 'Produto removido'
+    })
 
   } catch (err) {
-    console.error('ERRO DELETE PRODUTO:', err)
+    console.error(err)
     res.status(500).json({ erro: err.message })
   }
 })
@@ -191,7 +211,7 @@ app.post('/pedidos', async (req, res) => {
     })
 
   } catch (err) {
-    console.error('ERRO PEDIDO:', err)
+    console.error(err)
     res.status(500).json({ erro: err.message })
   }
 })
@@ -204,7 +224,7 @@ app.get('/pedidos', async (req, res) => {
     res.json(pedidos)
 
   } catch (err) {
-    console.error('ERRO PEDIDOS:', err)
+    console.error(err)
     res.status(500).json({ erro: err.message })
   }
 })
@@ -218,7 +238,7 @@ app.get('/pedidos/:id/itens', async (req, res) => {
     res.json(itens)
 
   } catch (err) {
-    console.error('ERRO ITENS:', err)
+    console.error(err)
     res.status(500).json({ erro: err.message })
   }
 })
@@ -235,7 +255,7 @@ app.put('/pedidos/:id/status', async (req, res) => {
     })
 
   } catch (err) {
-    console.error('ERRO STATUS:', err)
+    console.error(err)
     res.status(500).json({ erro: err.message })
   }
 })
@@ -253,7 +273,7 @@ app.delete('/pedidos/:id', async (req, res) => {
     })
 
   } catch (err) {
-    console.error('ERRO DELETE PEDIDO:', err)
+    console.error(err)
     res.status(500).json({ erro: err.message })
   }
 })
