@@ -1,153 +1,217 @@
-// ===== RECUPERA O CARRINHO DO LOCALSTORAGE =====
-const itensCarrinho = JSON.parse(localStorage.getItem('carrinhoNutriVida')) || []
+// =========================
+// RECUPERA CARRINHO
+// =========================
+let itensCarrinho = []
+
+try {
+  itensCarrinho =
+    JSON.parse(localStorage.getItem('carrinhoNutriVida')) || []
+} catch {
+  itensCarrinho = []
+}
 
 
-// ===== VOLTAR PARA A LOJA =====
+// =========================
+// VOLTAR PARA LOJA
+// =========================
 function voltarLoja() {
-    window.location.href = '/index.html'
+  window.location.href = '/index.html'
 }
 
 
-// ===== CONTROLA EXIBIÇÃO DE ENDEREÇO vs LOJA =====
+// =========================
+// ENTREGA
+// =========================
 function mudarEntrega() {
-    const tipo = document.getElementById('tipo-entrega').value
+  const tipo = document.getElementById('tipo-entrega')?.value
+  const divEndereco = document.getElementById('div-endereco')
+  const divLoja = document.getElementById('div-loja')
 
-    if (tipo === 'entrega') {
-        document.getElementById('div-endereco').classList.remove('oculto')
-        document.getElementById('div-loja').classList.add('oculto')
-    } else if (tipo === 'retirada') {
-        document.getElementById('div-endereco').classList.add('oculto')
-        document.getElementById('div-loja').classList.remove('oculto')
-    } else {
-        document.getElementById('div-endereco').classList.add('oculto')
-        document.getElementById('div-loja').classList.add('oculto')
-    }
+  if (!divEndereco || !divLoja) return
 
-    // Recalcula maquineta e pix ao mudar entrega
-    mudarPagamento()
+  if (tipo === 'entrega') {
+    divEndereco.classList.remove('oculto')
+    divLoja.classList.add('oculto')
+  } else if (tipo === 'retirada') {
+    divEndereco.classList.add('oculto')
+    divLoja.classList.remove('oculto')
+  } else {
+    divEndereco.classList.add('oculto')
+    divLoja.classList.add('oculto')
+  }
+
+  mudarPagamento()
 }
 
 
-// ===== CONTROLA EXIBIÇÃO DA MAQUINETA E DO PIX =====
+// =========================
+// PAGAMENTO
+// =========================
 function mudarPagamento() {
-    const pag = document.getElementById('forma-pagamento').value
-    const entrega = document.getElementById('tipo-entrega').value
+  const pag = document.getElementById('forma-pagamento')?.value
+  const entrega = document.getElementById('tipo-entrega')?.value
 
-    // Maquineta: só aparece se for cartão + entrega a domicílio
-    if (pag === 'cartao' && entrega === 'entrega') {
-        document.getElementById('div-maquineta').classList.remove('oculto')
-    } else {
-        document.getElementById('div-maquineta').classList.add('oculto')
-    }
+  const divMaquineta = document.getElementById('div-maquineta')
+  const divPix = document.getElementById('div-pix')
 
-    // PIX: mostra bloco com QR code e chave quando selecionado
-    if (pag === 'pix') {
-        document.getElementById('div-pix').classList.remove('oculto')
-    } else {
-        document.getElementById('div-pix').classList.add('oculto')
-    }
+  if (!divMaquineta || !divPix) return
+
+  if (pag === 'cartao' && entrega === 'entrega') {
+    divMaquineta.classList.remove('oculto')
+  } else {
+    divMaquineta.classList.add('oculto')
+  }
+
+  if (pag === 'pix') {
+    divPix.classList.remove('oculto')
+  } else {
+    divPix.classList.add('oculto')
+  }
 }
 
 
-// ===== COPIAR CHAVE PIX =====
+// =========================
+// COPIAR PIX
+// =========================
 function copiarPix() {
-    const chave = document.getElementById('chave-pix').value
-    const msgEl = document.getElementById('msg-pix-copiado')
+  const chaveInput = document.getElementById('chave-pix')
+  const msg = document.getElementById('msg-pix-copiado')
 
-    // Tenta usar a API moderna do clipboard
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(chave).then(() => {
-            msgEl.style.display = 'block'
-            setTimeout(() => msgEl.style.display = 'none', 2500)
-        }).catch(() => {
-            copiarFallback(chave, msgEl)
-        })
-    } else {
-        // Fallback para navegadores mais antigos ou HTTP
-        copiarFallback(chave, msgEl)
-    }
+  if (!chaveInput || !msg) return
+
+  const chave = chaveInput.value
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(chave)
+      .then(() => mostrarMsgPix(msg))
+      .catch(() => copiarFallback(chaveInput, msg))
+  } else {
+    copiarFallback(chaveInput, msg)
+  }
 }
 
-// Fallback de cópia via seleção de texto (funciona em HTTP também)
-function copiarFallback(texto, msgEl) {
-    const input = document.getElementById('chave-pix')
-    input.select()
-    input.setSelectionRange(0, 99999)
-    try {
-        document.execCommand('copy')
-        msgEl.style.display = 'block'
-        setTimeout(() => msgEl.style.display = 'none', 2500)
-    } catch (e) {
-        alert('Não foi possível copiar automaticamente. Copie manualmente: ' + texto)
-    }
+function copiarFallback(input, msg) {
+  input.select()
+  input.setSelectionRange(0, 99999)
+
+  try {
+    document.execCommand('copy')
+    mostrarMsgPix(msg)
+  } catch {
+    alert('Copie manualmente a chave PIX.')
+  }
+}
+
+function mostrarMsgPix(msg) {
+  msg.style.display = 'block'
+  setTimeout(() => {
+    msg.style.display = 'none'
+  }, 2500)
 }
 
 
-// ===== ENVIA O PEDIDO =====
+// =========================
+// ENVIAR PEDIDO
+// =========================
 async function enviarPedido() {
-    const nome = document.getElementById('nome-cliente').value.trim()
-    const telefone = document.getElementById('telefone-cliente').value.trim()
-    const tipoEntrega = document.getElementById('tipo-entrega').value
-    const pagamento = document.getElementById('forma-pagamento').value
-    const maquineta = document.getElementById('precisa-maquineta').value
+  const nome = document.getElementById('nome-cliente')?.value.trim()
+  const telefone = document.getElementById('telefone-cliente')?.value.trim()
+  const tipoEntrega = document.getElementById('tipo-entrega')?.value
+  const pagamento = document.getElementById('forma-pagamento')?.value
+  const maquineta = document.getElementById('precisa-maquineta')?.value
 
-    const endereco = tipoEntrega === 'entrega'
-        ? document.getElementById('endereco-cliente').value.trim()
-        : 'Retirada na Loja'
+  const endereco =
+    tipoEntrega === 'entrega'
+      ? document.getElementById('endereco-cliente')?.value.trim()
+      : 'Retirada na Loja'
 
-    // ===== VALIDAÇÕES =====
-    if (!nome) { alert('Por favor, preencha o seu nome.'); return }
-    if (!telefone) { alert('Por favor, preencha o seu telefone.'); return }
-    if (tipoEntrega === 'selecione') { alert('Por favor, selecione a forma de entrega.'); return }
-    if (tipoEntrega === 'entrega' && !endereco) { alert('Por favor, preencha o seu endereço.'); return }
-    if (pagamento === 'selecione') { alert('Por favor, selecione a forma de pagamento.'); return }
-    if (itensCarrinho.length === 0) { alert('Seu carrinho está vazio!'); return }
+  // validações
+  if (!nome) {
+    alert('Digite seu nome')
+    return
+  }
 
-    // Monta os itens no formato que o backend espera: { produto_id, quantidade }
-    const itensMapeados = itensCarrinho.map(item => ({
-        produto_id: item.produto_id,
-        quantidade: item.quantidade || 1
-    }))
+  if (!telefone || telefone.length < 8) {
+    alert('Telefone inválido')
+    return
+  }
 
-    const dadosPedido = {
-        cliente_nome: nome,
-        telefone: telefone,
-        endereco: endereco,
-        forma_pagamento: pagamento,
-        precisa_maquineta: (pagamento === 'cartao' && tipoEntrega === 'entrega') ? maquineta : 'N/A',
-        itens: itensMapeados
+  if (tipoEntrega === 'selecione') {
+    alert('Escolha a entrega')
+    return
+  }
+
+  if (tipoEntrega === 'entrega' && !endereco) {
+    alert('Digite o endereço')
+    return
+  }
+
+  if (pagamento === 'selecione') {
+    alert('Escolha a forma de pagamento')
+    return
+  }
+
+  if (itensCarrinho.length === 0) {
+    alert('Carrinho vazio')
+    return
+  }
+
+  const itens = itensCarrinho.map(item => ({
+    produto_id: item.produto_id,
+    quantidade: item.quantidade || 1
+  }))
+
+  const pedido = {
+    cliente_nome: nome,
+    telefone,
+    endereco,
+    forma_pagamento: pagamento,
+    precisa_maquineta:
+      pagamento === 'cartao' && tipoEntrega === 'entrega'
+        ? maquineta
+        : 'N/A',
+    itens
+  }
+
+  try {
+    const btn = document.getElementById('btn-enviar')
+    if (btn) btn.disabled = true
+
+    const resposta = await fetch('/pedidos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(pedido)
+    })
+
+    const resultado = await resposta.json()
+
+    if (resposta.ok) {
+      localStorage.removeItem('carrinhoNutriVida')
+
+      if (pagamento === 'pix') {
+        alert('Pedido enviado 🌿\nFinalize o PIX.')
+      } else {
+        alert('Pedido realizado com sucesso 🌿')
+      }
+
+      window.location.href = '/index.html'
+    } else {
+      alert(resultado.erro || 'Erro ao enviar pedido')
     }
 
-    try {
-        const resposta = await fetch('/pedidos', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dadosPedido)
-        })
-
-        const resultado = await resposta.json()
-
-        if (resposta.ok) {
-            localStorage.removeItem('carrinhoNutriVida')
-
-            // Mensagem personalizada para PIX
-            if (pagamento === 'pix') {
-                alert('Pedido enviado! 🌿\n\nNão esqueça de realizar o pagamento via PIX para confirmar seu pedido.')
-            } else {
-                alert('Pedido realizado com sucesso! 🌿')
-            }
-
-            window.location.href = '/index.html'
-        } else {
-            alert('Erro ao enviar pedido: ' + resultado.erro)
-        }
-    } catch (erro) {
-        alert('Erro de conexão com o servidor.')
-        console.error(erro)
-    }
+  } catch (erro) {
+    console.error(erro)
+    alert('Erro ao conectar com servidor')
+  }
 }
 
 
-// ===== INICIALIZAÇÃO =====
-// Garante que os campos condicionais estejam no estado correto ao carregar
-mudarEntrega()
+// =========================
+// INICIALIZA
+// =========================
+document.addEventListener('DOMContentLoaded', () => {
+  mudarEntrega()
+  mudarPagamento()
+})
