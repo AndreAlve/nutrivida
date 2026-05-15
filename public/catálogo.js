@@ -162,3 +162,10 @@ async function carregarProdutos() {
         console.error('Erro ao carregar produtos:', err)
     }
 }
+function login() {
+    window.location.href = '/admin.html'
+}
+
+function Voltar() {
+    window.location.href = '/index.html'
+}
