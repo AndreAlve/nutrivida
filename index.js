@@ -16,7 +16,7 @@ app.use(express.json())
 app.use(cors())
 app.use(express.static('public'))
 
-fs.mkdirSync('public/uploads', { recursive: true })
+fs.mkdirSync('/tmp/uploads', { recursive: true })
 
 // ===== MongoDB =====
 mongoose.connect(process.env.MONGO_URI)
@@ -26,7 +26,7 @@ mongoose.connect(process.env.MONGO_URI)
 // ===== Upload =====
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'public/uploads/')
+    cb(null, '/tmp/uploads/')
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname))
@@ -68,7 +68,7 @@ app.get('/produtos', async (req, res) => {
 
 app.post('/produtos', upload.single('foto'), async (req, res) => {
   try {
-    const foto = req.file ? 'uploads/' + req.file.filename : null
+    const foto = req.file ? '/tmp/uploads/' + req.file.filename : null
 
     const produto = await Produto.create({
       ...req.body,
@@ -86,7 +86,7 @@ app.put('/produtos/:id', upload.single('foto'), async (req, res) => {
     const dados = { ...req.body }
 
     if (req.file) {
-      dados.foto = 'uploads/' + req.file.filename
+      dados.foto = '/tmp/uploads/' + req.file.filename
     }
 
     await Produto.findByIdAndUpdate(req.params.id, dados)
