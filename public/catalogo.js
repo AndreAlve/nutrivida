@@ -58,6 +58,37 @@ async function carregarProdutos() {
     }
 }
 
+carregarProdutos()
+
+// ===== CARRINHO =====
+let carrinho = JSON.parse(localStorage.getItem('carrinhoNutriVida')) || []
+
+function adicionarAoCarrinho(id, nome, preco, unidade) {
+    const existente = carrinho.find(item => item.produto_id === id)
+
+    if (existente) {
+        existente.quantidade += 1
+        existente.precoTotal =
+            existente.quantidade * parseFloat(preco)
+    } else {
+        carrinho.push({
+            produto_id: id,
+            nome: nome,
+            preco: parseFloat(preco),
+            quantidade: 1,
+            unidade: unidade,
+            precoTotal: parseFloat(preco)
+        })
+    }
+
+    localStorage.setItem(
+        'carrinhoNutriVida',
+        JSON.stringify(carrinho)
+    )
+
+    alert(`✅ ${nome} adicionado ao carrinho`)
+}
+
 function login() {
     window.location.href = "/admin.html"
 }
@@ -65,5 +96,3 @@ function login() {
 function Voltar() {
     window.location.href = "/index.html"
 }
-
-carregarProdutos()
