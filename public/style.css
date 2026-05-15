@@ -1,0 +1,266 @@
+/* ===================================================
+   TELA DE BOAS-VINDAS
+   =================================================== */
+/* ===== VARIÁVEIS DE COR ===== */
+:root {
+    --verde-escuro: #1a3a2a;
+    --verde-medio: #2d5a3d;
+    --dourado: #c8941a;
+    --dourado-claro: #e8b84b;
+    --creme: #faf7f2;
+    --texto: #1a3a2a;
+    --sombra: rgba(26, 58, 42, 0.15);
+}
+
+/* ===== RESET ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* ===== BODY ===== */
+body  {
+    position: fixed;
+    inset: 0;
+    background-image: url('fundo.png');
+    background-repeat: repeat;
+    background-size: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeInTela 1s ease;
+}
+
+
+.boas-vindas-container {
+    padding: 20px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.boas-vindas-box {
+    background-color: var(--creme);
+    border-radius: 20px;
+    padding: 50px 40px;
+    text-align: center;
+    box-shadow: 0 15px 50px rgba(26, 58, 42, 0.3);
+    border-top: 6px solid var(--dourado);
+    animation: subirCaixa 1s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.boas-vindas-box::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(200, 148, 26, 0.05), transparent);
+    animation: brilho 3s linear infinite;
+}
+
+.bv-logo {
+    width: 120px;
+    margin-bottom: 20px;
+    animation: pulsarLogo 2s ease-in-out infinite;
+    position: relative;
+    z-index: 1;
+}
+
+.bv-titulo {
+    font-family: Georgia, serif;
+    font-size: 2.5rem;
+    color: var(--verde-escuro);
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+}
+
+.bv-plus {
+    color: var(--dourado);
+    font-weight: bold;
+}
+
+.bv-subtitulo {
+    font-family: Georgia, serif;
+    font-size: 1.1rem;
+    color: var(--verde-medio);
+    font-style: italic;
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 1;
+}
+
+.bv-divisor {
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--dourado), var(--dourado-claro));
+    border-radius: 2px;
+    margin: 0 auto 25px auto;
+    position: relative;
+    z-index: 1;
+}
+
+.bv-descricao {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 1;
+}
+
+.bv-features {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 35px;
+    position: relative;
+    z-index: 1;
+}
+
+.bv-feature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.bv-icon {
+    font-size: 1.8rem;
+    margin-bottom: 4px;
+}
+
+.bv-feature span:last-child {
+    font-size: 0.85rem;
+    color: var(--verde-escuro);
+    font-weight: bold;
+    text-align: center;
+}
+
+.bv-btn {
+    display: inline-block;
+    padding: 16px 40px;
+    background: linear-gradient(135deg, var(--verde-escuro), var(--verde-medio));
+    color: var(--dourado-claro);
+    border: none;
+    border-radius: 50px;
+    font-family: Georgia, serif;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(26, 58, 42, 0.4);
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.bv-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--verde-medio), var(--dourado));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.bv-btn:hover::before {
+    opacity: 1;
+}
+
+.bv-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(26, 58, 42, 0.5);
+}
+
+.bv-btn:active {
+    transform: translateY(-1px);
+}
+
+.bv-btn span {
+    position: relative;
+    z-index: 1;
+}
+
+.bv-rodape {
+    font-size: 0.85rem;
+    color: #888;
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+}
+
+/* ===================================================
+   ANIMAÇÕES
+   =================================================== */
+
+@keyframes fadeInTela {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes subirCaixa {
+    from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes pulsarLogo {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes brilho {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.saindo {
+    animation: fadeOutTela 0.6s ease forwards;
+}
+
+@keyframes fadeOutTela {
+    from { 
+        opacity: 1; 
+        transform: scale(1);
+    }
+    to { 
+        opacity: 0; 
+        transform: scale(0.95);
+        pointer-events: none; 
+    }
+}
+
+/* Responsividade para mobile */
+@media (max-width: 768px) {
+    .boas-vindas-box {
+        padding: 40px 30px;
+    }
+    
+    .bv-titulo {
+        font-size: 2rem;
+    }
+    
+    .bv-features {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .bv-feature {
+        flex-direction: row;
+        justify-content: center;
+        gap: 12px;
+    }
+}

@@ -1,0 +1,260 @@
+/* ===== VARIÁVEIS ===== */
+:root {
+  --verde-escuro: #1a3a2a;
+  --verde-medio: #2d5a3d;
+  --dourado: #c8941a;
+  --dourado-claro: #e8b84b;
+  --creme: #faf7f2;
+  --sombra: rgba(26, 58, 42, 0.15);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Georgia, serif;
+  background-image: url('fundo.png');
+  background-repeat: repeat;
+  background-size: 300px;
+  color: var(--verde-escuro);
+}
+
+/* ===== LOGIN ===== */
+#tela-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-box {
+  background-color: var(--creme);
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px var(--sombra);
+  border-top: 4px solid var(--dourado);
+  text-align: center;
+  width: 360px;
+}
+
+.login-logo {
+  width: 120px;
+  margin-bottom: 16px;
+}
+
+.login-box h2 {
+  color: var(--verde-escuro);
+  font-size: 1.4rem;
+  margin-bottom: 6px;
+}
+
+.login-box p {
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.login-box input:focus {
+  border-color: var(--dourado);
+}
+
+.login-box button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--verde-escuro);
+  color: var(--dourado-claro);
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.login-box button:hover {
+  background-color: var(--verde-medio);
+}
+
+#erro-login {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+/* ===== OCULTO ===== */
+.oculto {
+  display: none;
+}
+
+/* ===== MAIN ===== */
+main {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* ===== SECTIONS ===== */
+section {
+  background-color: var(--creme);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 16px var(--sombra);
+  border-top: 4px solid var(--dourado);
+}
+
+section h2 {
+  font-size: 1.4rem;
+  color: var(--verde-escuro);
+  border-bottom: 2px solid var(--dourado);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+/* ===== FORMULÁRIO ===== */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.formulario input,
+.formulario label {
+  font-size: 1rem;
+}
+
+.formulario input[type="text"],
+.formulario input[type="number"] {
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.formulario input:focus {
+  border-color: var(--dourado);
+}
+
+.formulario button {
+  padding: 12px;
+  background-color: var(--verde-escuro);
+  color: var(--dourado-claro);
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.formulario button:hover {
+  background-color: var(--verde-medio);
+}
+
+#msg-cadastro {
+  color: var(--verde-medio);
+  font-style: italic;
+}
+
+/* ===== CARDS DE PRODUTO NO ADMIN ===== */
+#lista-admin {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.card-admin {
+  background-color: white;
+  border-radius: 10px;
+  padding: 16px;
+  border-left: 4px solid var(--dourado);
+  box-shadow: 0 2px 8px var(--sombra);
+}
+
+.card-admin h3 {
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.card-admin p {
+  color: var(--dourado);
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.card-admin button {
+  width: 100%;
+  padding: 8px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.card-admin button:hover {
+  background-color: #c0392b;
+}
+
+/* ===== PEDIDOS ===== */
+.card-pedido {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  border-left: 4px solid var(--verde-medio);
+  box-shadow: 0 2px 8px var(--sombra);
+  margin-bottom: 12px;
+}
+
+.card-pedido h3 {
+  color: var(--verde-escuro);
+  margin-bottom: 6px;
+}
+
+.card-pedido p {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.card-pedido .status {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background-color: var(--dourado-claro);
+  color: var(--verde-escuro);
+  font-size: 0.85rem;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+#btn-sair {
+  width: 200px;
+  padding: 10px;
+  margin-left: 46%;
+  background-color: var(--dourado);
+  color: var(--verde-escuro);
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}

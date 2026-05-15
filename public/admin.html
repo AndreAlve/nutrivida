@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Nutri+Vida</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <!-- TELA DE LOGIN -->
+    <div id="tela-login">
+        <div class="login-box">
+            <img src="logo.png" alt="Logo Nutri+Vida" class="bv-logo">
+            <h2>Painel Administrativo</h2>
+            <p>Acesso restrito ao proprietário</p>
+
+            <input type="text" id="usuario" placeholder="Usuário">
+            <input type="password" id="senha" placeholder="Senha">
+            <button onclick="Login()">Entrar</button>
+            <p id="erro-login"></p>
+            <button onclick="Voltar()">Voltar para Loja</button>
+        </div>
+    </div>
+    <script src="admin.js"></script>
+</body>
+
+</html>

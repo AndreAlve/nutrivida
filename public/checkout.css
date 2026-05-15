@@ -1,0 +1,248 @@
+/* ===== VARIÁVEIS DE COR ===== */
+:root {
+    --verde-escuro: #1a3a2a;
+    --verde-medio: #2d5a3d;
+    --dourado: #c8941a;
+    --dourado-claro: #e8b84b;
+    --creme: #faf7f2;
+    --texto: #1a3a2a;
+    --sombra: rgba(26, 58, 42, 0.15);
+}
+
+/* ===== RESET ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ===== BODY ===== */
+body {
+    background-image: url('fundo.png');
+    background-repeat: repeat;
+    background-size: 300px;
+    font-family: Georgia, serif;
+    color: var(--texto);
+    min-height: 100vh;
+}
+
+/* ===== MENU ===== */
+menu {
+    background-color: #2d5a3d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 60px;
+}
+
+menu .icon {
+    width: 60px;
+    cursor: pointer;
+    /* indicação visual que é clicável */
+}
+
+menu h1 {
+    color: var(--dourado-claro);
+    font-size: 1.4rem;
+    text-align: center;
+}
+
+menu button {
+    padding: 8px 20px;
+    background-color: var(--verde-escuro);
+    color: var(--dourado);
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* ===== HEADER ===== */
+header {
+    text-align: center;
+    color: #1a3a2a;
+    font-size: 1rem;
+    margin-top: 6px;
+    font-style: italic;
+}
+
+/* ===== MAIN / CAIXA DO FORMULÁRIO ===== */
+main {
+    max-width: 600px;
+    margin: auto;
+    background: var(--creme);
+    padding: 30px;
+    border-radius: 12px;
+}
+
+/* ===== FORMULÁRIO ===== */
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.formulario input,
+.formulario label {
+    font-size: 1rem;
+}
+
+.formulario input[type="text"],
+.formulario input[type="number"],
+.formulario select {
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+    /* Garante que os selects e inputs ocupem toda a largura */
+    width: 100%;
+}
+
+.formulario input:focus {
+    border-color: var(--dourado);
+}
+
+.formulario button {
+    padding: 12px;
+    background-color: var(--verde-escuro);
+    color: var(--dourado-claro);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.formulario button:hover {
+    background-color: var(--verde-medio);
+}
+
+.tipo-entrega {
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* ===== CLASSE OCULTO =====
+CORREÇÃO: Esta classe estava sendo usada no JS (classList.add/remove('oculto'))
+mas não existia no CSS — por isso nada sumia ou aparecia na tela.
+   display: none esconde completamente o elemento. */
+.oculto {
+    display: none;
+}
+
+/* ===== DIV DO ENDEREÇO DA LOJA =====
+   Estilo para o bloco que exibe o endereço de retirada */
+#div-loja {
+    background-color: #e8f5e9;
+    border: 1px solid var(--verde-medio);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 0.95rem;
+    color: var(--verde-escuro);
+}
+
+/* ===== CAIXA DO LOGIN / CHECKOUT ===== */
+.login-box {
+    background-color: var(--creme);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px var(--sombra);
+    border-top: 4px solid var(--dourado);
+    width: 600px;
+}
+
+.div-pix {
+    background-color: #e8f5e9;
+    border: 1px solid var(--verde-medio);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 0.95rem;
+    color: var(--verde-escuro);
+}
+
+.code {
+    width: 180px;
+    height: 180px;
+    border-radius: 8px;
+    border: 2px solid #c8941a;
+    margin-bottom: 12px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.chave-pix {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: #fff;
+    color: #1a3a2a;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copiar {
+
+    padding: 10px 16px;
+    background: #1a3a2a;
+    color: #e8b84b;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: bold;
+    white-space: nowrap;
+    transition: background 0.2s;
+}
+
+.copiar:hover {
+    background: #2d5a3d;
+}
+
+.feedback-copiado {
+    color: #2d5a3d;
+    font-size: 0.85rem;
+    margin-top: 8px;
+    font-weight: bold;
+    display: none;
+}
+
+.Após {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 10px;
+    font-style: italic
+}
+
+.Após:hover {
+    color:c;
+}
+
+.enviar-pedido {
+    padding: 12px;
+    background-color: var(--verde-escuro);
+    color: var(--dourado-claro);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.enviar-pedido:hover {
+    background-color: var(--verde-medio);
+}
+
+.voltar-loja {
+    padding: 12px;
+    background-color: var(--dourado-claro);
+    color: var(--verde-escuro);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}

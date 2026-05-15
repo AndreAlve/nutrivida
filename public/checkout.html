@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout - Nutri+Vida</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="checkout.css">
+</head>
+
+<body>
+
+    <!-- ===== MENU ===== -->
+    <menu>
+        <img src="logo.png" alt="Logo" class="icon" onclick="voltarLoja()">
+        <!-- CORREÇÃO: função renomeada para voltarLoja() — mais claro e não apaga login do admin -->
+        <h1>Finalizar Pedido</h1>
+    </menu>
+
+    <!-- ===== CABEÇALHO ===== -->
+    <header>
+        <h1>Detalhes da Entrega</h1>
+    </header>
+
+    <br>
+
+    <!-- ===== FORMULÁRIO PRINCIPAL ===== -->
+    <main class="login-box">
+        <div class="formulario">
+
+            <!-- CAMPO NOME -->
+            <label>Nome do cliente</label>
+            <!-- CORREÇÃO: id era "inputNome" mas o JS buscava "nome-cliente" — padronizado -->
+            <input id="nome-cliente" type="text" placeholder="Ex: Carlos Silva">
+
+            <!-- CAMPO TELEFONE -->
+            <label>Telefone</label>
+            <!-- CORREÇÃO: input não tinha id nenhum — adicionado id="telefone-cliente" -->
+            <input id="telefone-cliente" type="text" placeholder="Ex: (81) 99999-0000">
+            <!-- OBS: type="text" no lugar de type="number" para aceitar parênteses e traços -->
+
+            <!-- TIPO DE ENTREGA -->
+            <label>Como você quer receber?</label>
+            <select id="tipo-entrega" title="Selecione a forma de entrega" onchange="mudarEntrega()">
+                <!-- CORREÇÃO: primeiro option era value="retirada" (igual à outra opção) — mudado para "selecione" -->
+                <option value="selecione">Selecione a Forma de Entrega</option>
+                <option value="entrega">Entregar no meu endereço</option>
+                <option value="retirada">Vou buscar na loja</option>
+            </select>
+
+            <!-- CAMPO ENDEREÇO (começa oculto, aparece só quando tipo = "entrega") -->
+            <!-- CORREÇÃO: adicionada class="oculto" para começar escondido -->
+            <div id="div-endereco" class="oculto">
+                <input type="text" id="endereco-cliente" placeholder="Seu Endereço Completo">
+            </div>
+
+            <!-- ENDEREÇO DA LOJA (começa oculto, aparece só quando tipo = "retirada") -->
+            <!-- CORREÇÃO: adicionada class="oculto" para começar escondido -->
+            <div id="div-loja" class="oculto">
+                📍 Endereço para retirada: Tv. Dr. João Pessoa - Centro, Altinho - PE
+            </div>
+
+            <!-- FORMA DE PAGAMENTO -->
+            <label>Forma de Pagamento:</label>
+            <select id="forma-pagamento" title="Selecione a forma de Pagamento" onchange="mudarPagamento()">
+                <!-- CORREÇÃO: primeiro option tinha value="dinheiro" (igual a outra opção) — mudado para "selecione" -->
+                <option value="selecione">Selecione a Forma de Pagamento</option>
+                <option value="pix">PIX</option>
+                <option value="cartao">Cartão de Crédito/Débito</option>
+                <option value="dinheiro">Dinheiro</option>
+            </select>
+
+            <!-- ===== BLOCO PIX ===== -->
+            <!-- Aparece só quando forma de pagamento = pix -->
+
+        <div id="div-pix" class="oculto">
+                <p>Faça o pagamento via 📲PIX para:</p>
+                <img src="qrcode-pix.png"  alt="QR Code PIX"  class="code" onerror="this.style.display='none';document.getElementById('qr-fallback').style.display='block'">
+
+            <!-- Fallback caso a imagem não exista ainda -->
+            <div id="qr-fallback"></div>
+                <p> Ou copie a chave PIX abaixo: </p>
+                <div>
+                <input id="chave-pix" type="text" value="81 99566-6335" readonly onclick="copiarPix()"
+                title="Clique para copiar">
+
+                <button type="button" class="copiar" onclick="copiarPix()">📋 Copiar</button>
+                <p>Após o pagamento, envie o comprovante para nosso WhatsApp: (81) 99999-0000</p>
+                </div>
+
+
+        <!-- Feedback de copiado -->
+            <p id="feedback-copiado" style="display: none;">✅ Chave copiada!</p>
+            <P id="Após">Após o pagamento, clique em "Confirmar e Enviar Pedido"</p>
+
+        </div>
+        <!-- MAQUINETA: aparece só se for cartão + entrega -->
+        <!-- CORREÇÃO: o select estava solto no HTML sem div pai — o JS precisava de uma div com id="div-maquineta" para funcionar -->
+        <div id="div-maquineta" class="oculto">
+            <label>Vai precisar levar maquineta?</label>
+            <select id="precisa-maquineta" title="Selecione se precisa de maquineta">
+                <option value="selecione">Selecione</option>
+                <option value="sim">Sim</option>
+                <option value="nao">Não</option>
+            </select>
+        </div>
+
+        <!-- BOTÕES -->
+        <button type="button" class="enviar-pedido" onclick="enviarPedido()">Confirmar e Enviar Pedido</button>
+        <button type="button" class="voltar-loja" onclick="voltarLoja()">Voltar para Loja</button>
+        <!-- CORREÇÃO: Voltar() renomeado para voltarLoja() -->
+
+        </div>
+    </main>
+    <!-- CORREÇÃO: </main> e </html> estavam faltando no arquivo original -->
+
+    <!-- CORREÇÃO: <script> estava dentro do <main> — deve ficar antes do </body> -->
+    <script src="checkout.js"></script>
+
+</body>
+
+</html>
