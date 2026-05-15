@@ -16,4 +16,4 @@ const PedidoSchema = new mongoose.Schema({
   }
 })
 
-module.exports = mongoose.model('Pedido', PedidoSchema)
+module.exports = mongoose.model('Pedido', PedidoSchema, 'pedidos')

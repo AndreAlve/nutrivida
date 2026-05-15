@@ -61,9 +61,10 @@ app.get('/produtos', async (req, res) => {
   try {
     const produtos = await Produto.find()
     res.json(produtos)
-  } catch {
-    res.status(500).json({ erro: 'Erro ao buscar produtos' })
-  }
+  } catch (err) {
+  console.error(err)
+  res.status(500).json({ erro: err.message })
+}
 })
 
 app.post('/produtos', upload.single('foto'), async (req, res) => {
@@ -76,8 +77,9 @@ app.post('/produtos', upload.single('foto'), async (req, res) => {
     })
 
     res.json(produto)
-  } catch {
-    res.status(500).json({ erro: 'Erro ao criar produto' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ erro: err.message })
   }
 })
 
@@ -92,8 +94,9 @@ app.put('/produtos/:id', upload.single('foto'), async (req, res) => {
     await Produto.findByIdAndUpdate(req.params.id, dados)
 
     res.json({ mensagem: 'Produto atualizado' })
-  } catch {
-    res.status(500).json({ erro: 'Erro ao atualizar' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ erro: err.message })
   }
 })
 
@@ -101,8 +104,9 @@ app.delete('/produtos/:id', async (req, res) => {
   try {
     await Produto.findByIdAndDelete(req.params.id)
     res.json({ mensagem: 'Produto removido' })
-  } catch {
-    res.status(500).json({ erro: 'Erro ao remover' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ erro: err.message })
   }
 })
 
@@ -144,7 +148,7 @@ app.post('/pedidos', async (req, res) => {
     })
 
   } catch (err) {
-    console.log(err)
+    console.error(err)
     res.status(500).json({ erro: 'Erro ao criar pedido' })
   }
 })

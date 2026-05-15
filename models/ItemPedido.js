@@ -15,4 +15,4 @@ const ItemPedidoSchema = new mongoose.Schema({
   }
 })
 
-module.exports = mongoose.model('ItemPedido', ItemPedidoSchema)
+module.exports = mongoose.model('ItemPedido', ItemPedidoSchema, 'itempedidos')
