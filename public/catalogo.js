@@ -1,26 +1,33 @@
 async function carregarProdutos() {
-    try {
-        const resposta = await fetch('/produtos')
-        const produtos = await resposta.json()
-        const lista = document.getElementById('lista-produtos')
+  try {
+    const resposta = await fetch("/produtos");
+    const produtos = await resposta.json();
+    console.log('Produtos recebidos:', produtos);
+    const lista = document.getElementById("lista-produtos");
 
-        lista.innerHTML = ''
+    lista.innerHTML = "";
+    if (!Array.isArray(produtos)) {
+      console.error("API não retornou array:", produtos);
+      return;
+    }
 
-        produtos.forEach(produto => {
-            const card = document.createElement('div')
-            card.classList.add('card-produto')
+    produtos.forEach((produto) => {
+      const card = document.createElement("div");
+      card.classList.add("card-produto");
 
-            const porPeso = produto.unidade === 'grama'
+      const porPeso = produto.unidade === "grama";
 
-            // Corrige URL da imagem
-            const foto = produto.foto
-                ? produto.foto.startsWith('http')
-                    ? produto.foto
-                    : `/${produto.foto}`
-                : null
+      // Corrige URL da imagem
+      const foto = produto.foto
+        ? produto.foto.startsWith("http")
+          ? produto.foto
+          : `/${produto.foto}`
+        : null;
 
-            card.innerHTML = `
-                ${foto ? `
+      card.innerHTML = `
+                ${
+                  foto
+                    ? `
                     <img 
                         src="${foto}" 
                         style="
@@ -31,7 +38,9 @@ async function carregarProdutos() {
                             margin-bottom:12px;
                         "
                     >
-                ` : ''}
+                `
+                    : ""
+                }
 
                 <h3>${produto.nome}</h3>
                 <p>${produto.descricao}</p>
@@ -43,11 +52,13 @@ async function carregarProdutos() {
                         color:#888;
                         font-weight:normal
                     ">
-                        ${porPeso ? '/ 100g' : '/ unidade'}
+                        ${porPeso ? "/ 100g" : "/ unidade"}
                     </span>
                 </div>
 
-                ${porPeso ? `
+                ${
+                  porPeso
+                    ? `
                 <div class="controle-peso">
                     <label style="
                         font-size:0.85rem;
@@ -106,7 +117,8 @@ async function carregarProdutos() {
                         = R$ ${parseFloat(produto.preco).toFixed(2)}
                     </p>
                 </div>
-                ` : `
+                `
+                    : `
                 <div class="controle-quantidade">
                     <button class="btn-qtd"
                         onclick="mudarQtd(this, -1)">
@@ -120,52 +132,46 @@ async function carregarProdutos() {
                         +
                     </button>
                 </div>
-                `}
+                `
+                }
 
                 <button onclick="
                     adicionarAoCarrinho(
                         '${produto._id}',
                         '${produto.nome}',
                         ${produto.preco},
-                        '${produto.unidade || 'unidade'}',
+                        '${produto.unidade || "unidade"}',
                         this
                     )
                 ">
                     + Adicionar ao carrinho
                 </button>
-            `
+            `;
 
-            if (porPeso) {
-                const inputPeso =
-                    card.querySelector('.input-peso')
+      if (porPeso) {
+        const inputPeso = card.querySelector(".input-peso");
 
-                const precoPeso =
-                    card.querySelector('.preco-peso')
+        const precoPeso = card.querySelector(".preco-peso");
 
-                inputPeso.addEventListener('input', () => {
-                    const g =
-                        parseInt(inputPeso.value) || 0
+        inputPeso.addEventListener("input", () => {
+          const g = parseInt(inputPeso.value) || 0;
 
-                    const total =
-                        (parseFloat(produto.preco) * g / 100)
-                        .toFixed(2)
+          const total = ((parseFloat(produto.preco) * g) / 100).toFixed(2);
 
-                    precoPeso.textContent =
-                        `= R$ ${total}`
-                })
-            }
+          precoPeso.textContent = `= R$ ${total}`;
+        });
+      }
 
-            lista.appendChild(card)
-        })
-
-    } catch (err) {
-        console.error('Erro ao carregar produtos:', err)
-    }
+      lista.appendChild(card);
+    });
+  } catch (err) {
+    console.error("Erro ao carregar produtos:", err);
+  }
 }
 function login() {
-    window.location.href = '/admin.html'
+  window.location.href = "/admin.html";
 }
 
 function Voltar() {
-    window.location.href = '/index.html'
+  window.location.href = "/index.html";
 }
