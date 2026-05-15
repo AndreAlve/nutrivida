@@ -1,63 +1,118 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Admin - Nutri+Vida</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="stylesheet" href="admin.css">
-    <link rel="stylesheet" href="catálogo.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Painel Admin - Nutri+Vida</title>
+
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="catalogo.css">
 </head>
+
 <body>
-<menu>
-    <img src="favicon.png" alt="Logo" class="icon">
+
+  <menu>
+    <img src="favicon.png" alt="Logo Nutri+Vida" class="icon">
     <h1>Painel Admin</h1>
-</menu>
-<br>
-<header>
+  </menu>
+
+  <header>
     <h1>⚙️ Administração</h1>
-</header>
+  </header>
 
-<main>
-    <!-- Cadastrar Produto -->
+  <main>
+
+    <!-- CADASTRAR -->
     <section id="secao-cadastro">
-        <h2>Cadastrar Produto</h2>
-        <div class="formulario">
-            <input type="text" id="nome" placeholder="Nome do produto">
-            <input type="number" id="preco" placeholder="Preço (ex: 10.50)" step="0.01">
-            <input type="text" id="descricao" placeholder="Descrição">
-            <input type="number" id="estoque" placeholder="Estoque">
+      <h2>Cadastrar Produto</h2>
 
-            <label>⚖️ Venda por:</label>
-            <select id="unidade" style="padding:10px;border:2px solid #ddd;border-radius:8px;font-size:1rem">
-                <option value="unidade">📦 Unidade (peça) — preço por unidade</option>
-                <option value="grama">⚖️ Peso (gramas) — preço por 100g</option>
-            </select>
+      <div class="formulario">
 
-            <label>Foto do produto:</label>
-            <input type="file" id="foto" accept="image/*" title="Foto do produto">
-            <button onclick="cadastrarProduto()">+ Cadastrar Produto</button>
-            <p id="msg-cadastro"></p>
-        </div>
+        <input
+          type="text"
+          id="nome"
+          placeholder="Nome do produto"
+        >
+
+        <input
+          type="number"
+          id="preco"
+          placeholder="Preço (ex: 10.50)"
+          step="0.01"
+        >
+
+        <input
+          type="text"
+          id="descricao"
+          placeholder="Descrição"
+        >
+
+        <input
+          type="number"
+          id="estoque"
+          placeholder="Estoque"
+        >
+
+        <label for="unidade">⚖️ Venda por:</label>
+        <select id="unidade">
+          <option value="unidade">
+            📦 Unidade
+          </option>
+          <option value="grama">
+            ⚖️ Peso (100g)
+          </option>
+        </select>
+
+        <label for="foto">📷 Foto do produto:</label>
+        <input
+          type="file"
+          id="foto"
+          accept="image/*"
+        >
+
+        <button
+          type="button"
+          onclick="cadastrarProduto()"
+        >
+          + Cadastrar Produto
+        </button>
+
+        <p id="msg-cadastro"></p>
+
+      </div>
     </section>
 
-    <!-- Lista de Produtos -->
+
+    <!-- PRODUTOS -->
     <section id="secao-produtos">
-        <h2>Produtos Cadastrados</h2>
-        <div id="lista-admin"></div>
+      <h2>Produtos Cadastrados</h2>
+      <div id="lista-admin"></div>
     </section>
 
-    <!-- Pedidos -->
+
+    <!-- PEDIDOS -->
     <section id="secao-pedidos">
-        <h2>Pedidos Recebidos</h2>
-        <div id="lista-pedidos"></div>
+      <h2>Pedidos Recebidos</h2>
+      <div id="lista-pedidos"></div>
     </section>
-</main>
 
-<div id="sair">
-    <button id="btn-sair" onclick="sair()">Sair</button>
-</div>
 
-<script src="painel.js"></script>
+    <!-- SAIR -->
+    <section id="sair">
+      <button
+        id="btn-sair"
+        type="button"
+        onclick="sair()"
+      >
+        Sair
+      </button>
+    </section>
+
+  </main>
+
+  <script src="painel.js"></script>
+
 </body>
 </html>

@@ -1,5 +1,5 @@
 function entrar() {
-  window.location.href = '/catálogo.html';
+  window.location.href = '/catalogo.html';
 }
 
 // ===== FUNÇÃO PARA ENTRAR NA LOJA =====

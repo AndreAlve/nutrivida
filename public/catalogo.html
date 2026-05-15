@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Nutri+Vida</title>
+
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="catalogo.css">
+</head>
+
+<body>
+
+  <menu>
+    <img
+      src="favicon.png"
+      alt="Logo Nutri+Vida"
+      class="icon"
+      onclick="login()"
+    >
+    <h1>Nutri+Vida</h1>
+  </menu>
+
+  <header>
+    <h1>Catálogo de Produtos</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Nossos Produtos 🌿</h2>
+      <div id="lista-produtos"></div>
+    </section>
+  </main>
+
+
+  <!-- botão carrinho -->
+  <button
+    id="carrinho-btn"
+    type="button"
+    onclick="toggleCarrinho()"
+  >
+    🛒 Carrinho
+    <span id="carrinho-count">0</span>
+  </button>
+
+
+  <!-- painel carrinho -->
+  <div id="carrinho-painel">
+
+    <div id="carrinho-painel-header">
+      <h3>🛒 Meu Carrinho</h3>
+
+      <button
+        id="btn-fechar-carrinho"
+        type="button"
+        onclick="fecharCarrinho()"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div id="carrinho-vazio">
+      Seu carrinho está vazio 🌿
+    </div>
+
+    <div id="itens-carrinho"></div>
+
+    <div
+      id="carrinho-painel-footer"
+      style="display:none"
+    >
+      <p id="carrinho-total">
+        Total: R$ 0.00
+      </p>
+
+      <button
+        id="btn-finalizar"
+        type="button"
+      >
+        Finalizar Pedido →
+      </button>
+    </div>
+
+  </div>
+
+
+  <!-- toast -->
+  <div class="toast" id="toast"></div>
+
+
+  <!-- voltar -->
+  <div id="sair">
+    <button
+      id="btn-sair"
+      type="button"
+      onclick="Voltar()"
+    >
+      Voltar para Loja
+    </button>
+  </div>
+
+
+  <script src="catalogo.js"></script>
+
+</body>
+</html>

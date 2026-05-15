@@ -2,54 +2,87 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nutri+Vida</title>
-    <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Nutri+Vida</title>
+
+  <meta
+    name="description"
+    content="Nutri+Vida - Produtos naturais com qualidade e carinho."
+  >
+
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <!-- ===== TELA DE BOAS-VINDAS (overlay completo) ===== -->
-    <div id="tela-boas-vindas">
-        <div class="boas-vindas-container">
-            <div class="boas-vindas-box">
-                <img src="favicon.png" alt="Logo Nutri+Vida" class="bv-logo">
-                <h1 class="bv-titulo">Nutri<span class="bv-plus">+</span>Vida</h1>
-                <p class="bv-subtitulo">Produtos naturais com qualidade e carinho</p>
-                
-                <div class="bv-divisor"></div>
-                
-                <p class="bv-descricao">
-                    Bem-vindo à nossa loja! Aqui você encontra os melhores produtos naturais, 
-                    selecionados especialmente para sua saúde e bem-estar.
-                </p>
 
-                <div class="bv-features">
-                    <div class="bv-feature">
-                        <span class="bv-icon">🍃</span>
-                        <span>100% Natural</span>
-                    </div>
-                    <div class="bv-feature">
-                        <span class="bv-icon">🚚</span>
-                        <span>Entrega Rápida</span>
-                    </div>
-                    <div class="bv-feature">
-                        <span class="bv-icon">💚</span>
-                        <span>Qualidade Garantida</span>
-                    </div>
-                </div>
+  <!-- TELA DE BOAS-VINDAS -->
+  <div id="tela-boas-vindas">
+    <div class="boas-vindas-container">
 
-                <button class="bv-btn" onclick="entrar()">
-                    🌿 Entrar na Loja
-                </button>
-                
-                <p class="bv-rodape">Entrega e retirada disponíveis em Altinho-PE</p>
-            </div>
+      <div class="boas-vindas-box">
+
+        <img
+          src="favicon.png"
+          alt="Logo Nutri+Vida"
+          class="bv-logo"
+        >
+
+        <h1 class="bv-titulo">
+          Nutri<span class="bv-plus">+</span>Vida
+        </h1>
+
+        <p class="bv-subtitulo">
+          Produtos naturais com qualidade e carinho
+        </p>
+
+        <div class="bv-divisor"></div>
+
+        <p class="bv-descricao">
+          Bem-vindo à nossa loja!
+          Aqui você encontra os melhores produtos naturais,
+          selecionados especialmente para sua saúde e bem-estar.
+        </p>
+
+        <div class="bv-features">
+
+          <div class="bv-feature">
+            <span class="bv-icon">🍃</span>
+            <span>100% Natural</span>
+          </div>
+
+          <div class="bv-feature">
+            <span class="bv-icon">🚚</span>
+            <span>Entrega Rápida</span>
+          </div>
+
+          <div class="bv-feature">
+            <span class="bv-icon">💚</span>
+            <span>Qualidade Garantida</span>
+          </div>
+
         </div>
+
+        <button
+          class="bv-btn"
+          type="button"
+          onclick="entrar()"
+        >
+          🌿 Entrar na Loja
+        </button>
+
+        <p class="bv-rodape">
+          Entrega e retirada disponíveis em Altinho-PE
+        </p>
+
+      </div>
+
     </div>
+  </div>
 
-    <script src="script.js"></script>
+  <script src="script.js"></script>
+
 </body>
-
 </html>
